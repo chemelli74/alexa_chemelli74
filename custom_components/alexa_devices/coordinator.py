@@ -80,8 +80,9 @@ class AmazonDevicesCoordinator(DataUpdateCoordinator[dict[str, AmazonDevice]]):
                 translation_placeholders={"error": repr(err)},
             ) from err
         else:
-            _LOGGER.debug("Checking changes in devices: %s", data.keys())
             current_devices = set(data.keys())
+            _LOGGER.debug("Checking changes in devices: %s", current_devices)
+            _LOGGER.debug("Previous devices: %s", self.previous_devices)
             if stale_devices := self.previous_devices - current_devices:
                 _LOGGER.debug("Detected change in devices: %s removed", stale_devices)
                 await self._async_remove_device_stale(stale_devices)
